@@ -42,3 +42,23 @@ class TestInstallCommand(object):
         requirements_file = open(constants.VE_LOCK_FILENAME)
         requirements_data = requirements_file.read()
         assert 'test1==0.1' in requirements_data
+
+    @attr('slow')
+    @hide_subprocess_stdout
+    @fudge.test
+    def test_run_install_multiple_packages(self):
+        project = self.project
+        options = self.options
+        temp_dir = self.temp_dir
+        fake_req_set = (project.__patch_method__('process_config_section')
+                .returns_fake())
+        fake_req_set.expects('to_pip_str').returns("test1\ntest5")
+        self.command.run(project, options)
+        requirements_file = open(constants.VE_LOCK_FILENAME)
+        requirements_data = requirements_file.read()
+        expected_packages = ['test1==0.1', 'test2==1.3', 
+                'test3==0.10.1', 'test5==1.4.3']
+        for package in expected_packages:
+            assert package in requirements_data
+
+
