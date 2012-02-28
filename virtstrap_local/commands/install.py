@@ -8,6 +8,7 @@ import tempfile
 import subprocess
 from contextlib import contextmanager
 from virtstrap import commands
+from virtstrap import constants
 from virtstrap.requirements import RequirementSet
 
 def process_requirements_config(raw_requirements):
@@ -57,6 +58,6 @@ class InstallCommand(commands.ProjectCommand):
         process = subprocess.Popen([pip_bin, 'freeze'],
                 stdout=subprocess.PIPE)
         requirements = process.stdout.read()
-        requirements_lock = open(project.path('requirements.lock'), 'w')
+        requirements_lock = open(project.path(constants.VE_LOCK_FILENAME), 'w')
         requirements_lock.write(requirements)
         requirements_lock.close()
