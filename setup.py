@@ -1,13 +1,12 @@
 from setuptools import setup, find_packages
 import sys, os
 
-VERSION = '0.3.0-alpha'
+VERSION = '0.3.0'
 
 setup(name='virtstrap-local',
     version=VERSION,
-    description="",
-    long_description="""\
-""",
+    description="virtstrap's project local commands",
+    long_description="virtstrap-local is not meant to be installed manually",
     classifiers=[],
     keywords='',
     author='Reuven V. Gonzales',
@@ -18,7 +17,7 @@ setup(name='virtstrap-local',
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'virtstrap-core',
+        'virtstrap-core==%s' % VERSION, # Ensure matching versions
     ],
     entry_points={
         'console_scripts': [
