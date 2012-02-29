@@ -10,6 +10,7 @@ from contextlib import contextmanager
 from virtstrap import commands
 from virtstrap import constants
 from virtstrap.requirements import RequirementSet
+from virtstrap.locker import RequirementsLocker
 
 def process_requirements_config(raw_requirements):
     requirement_set = RequirementSet.from_config_data(raw_requirements)
@@ -54,6 +55,13 @@ class InstallCommand(commands.ProjectCommand):
             raise InstallationError('An error occured during installation')
 
     def freeze_requirements(self, project, requirement_set):
+        locker = RequirementsLocker()
+        lock_str = locker.lock(requirement_set)
+        requirements_lock = open(project.path(constants.VE_LOCK_FILENAME), 'w')
+        requirements_lock.write(lock_str)
+        requirements_lock.close()
+
+    def freeze_requirements_old(self, project, requirement_set):
         pip_bin = project.bin_path('pip')
         process = subprocess.Popen([pip_bin, 'freeze'],
                 stdout=subprocess.PIPE)
